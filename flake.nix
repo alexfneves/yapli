@@ -32,13 +32,36 @@
               modules = [
                 {
                   # https://devenv.sh/reference/options/
-                  packages = [ pkgs.hello ];
+                  packages = [
+                    pkgs.emscripten
+                    pkgs.nlohmann_json
+                    pkgs.inja
+                    pkgs.http-server
+                  ];
 
                   enterShell = ''
-                    hello
+                    echo "Yet Another Platform for Learning Idioms"
                   '';
 
-                  processes.hello.exec = "hello";
+
+                  scripts = {
+                    build.exec = ''
+                      export INJA_INCLUDE_PATH=${pkgs.inja}/include
+                      export JSON_INCLUDE_PATH=${pkgs.nlohmann_json}/include
+                      emcc src/main.cpp \
+                        -std=c++17 \
+                        -I"$INJA_INCLUDE_PATH" \
+                        -I"$JSON_INCLUDE_PATH" \
+                        -s WASM=1 \
+                        -s MODULARIZE=1 \
+                        -s EXPORT_NAME=createModule \
+                        -s EXPORTED_RUNTIME_METHODS=ccall,cwrap \
+                        --bind \
+                        -o public/out.js
+                    '';
+                  };
+                  processes.serve.exec = "http-server public -p 8080";
+
                 }
               ];
             };

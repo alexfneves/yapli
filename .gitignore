@@ -1,2 +1,4 @@
 .devenv
 .direnv
+public/out.wasm
+public/out.js
