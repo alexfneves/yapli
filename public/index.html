@@ -1,10 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+  <meta charset="UTF-8">
   <title>Inja WASM Demo</title>
+  
+  <style>
+    .container {
+      position: relative;
+      width: 600px;
+      font-family: sans-serif;
+    }
+
+    .highlight-layer,
+    .input-layer {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      padding: 10px;
+      border: 1px solid #ccc;
+      min-height: 100px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .highlight-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: transparent;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .highlight-layer .word {
+      background-color: yellow;
+      color: black;
+    }
+
+    .highlight-layer .phrase {
+      background-color: lightblue;
+      color: black;
+    }
+
+    .input-layer {
+      position: relative;
+      background: transparent;
+      color: black;
+      z-index: 2;
+      caret-color: black;
+    }
+
+    .input-layer:focus {
+      outline: none;
+    }
+  </style>
 </head>
 <body>
-  <div id="output">Loading...</div>
+  <div id="asdf">Loading...</div>
+  <div id="fdsa">Loading...</div>
 
 
   <script src="out.js"></script>
@@ -15,9 +68,24 @@
     };
 
     createModule().then((Module) => {
-      const render = Module.cwrap('render', 'string', ['string']);
-      const result = render(JSON.stringify(context));
-      document.getElementById("output").innerHTML = result;
+      const render = Module.cwrap('render', 'string', ['string', 'string']);
+      let result = render("asdf", JSON.stringify(context));
+      document.getElementById("asdf").innerHTML = result;
+      <!-- result = render("fdsa", JSON.stringify(context)); -->
+      <!-- document.getElementById("fdsa").innerHTML = result; -->
+      
+      result = render("fdsa", JSON.stringify(context));
+      const container = document.getElementById("fdsa");
+      container.innerHTML = result;
+
+      // ✅ Re-run <script> blocks from injected HTML
+      const scripts = container.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        newScript.text = oldScript.textContent;
+        document.head.appendChild(newScript);
+        oldScript.remove();
+      });
     });
   </script>
 

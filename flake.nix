@@ -68,7 +68,7 @@
                         -o public/out.js
                     '';
                   };
-                  processes.serve.exec = "http-server public -p 8080";
+                  processes.serve.exec = "http-server -p 8080 .";
 
                 }
               ];

@@ -1,0 +1,88 @@
+
+
+<div class="container">
+  <div id="highlight" class="highlight-layer" aria-hidden="true"></div>
+  <div id="input" class="input-layer" contenteditable="true" spellcheck="false">
+    This is a sample sentence. Here is another phrase with different words.
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById('input');
+  const highlight = document.getElementById('highlight');
+
+  // Prevent typing or editing
+  input.addEventListener('beforeinput', e => e.preventDefault());
+
+  input.addEventListener('keyup', updateHighlight);
+  input.addEventListener('mouseup', updateHighlight);
+
+  function updateHighlight() {
+    const text = input.innerText;
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    const pos = getCursorIndex(range, input);
+    if (pos == null) return;
+
+    const { phraseStart, phraseEnd } = findPhrase(text, pos);
+    const { wordStart, wordEnd } = findWord(text.slice(phraseStart, phraseEnd), pos - phraseStart);
+
+    const beforePhrase = escapeHTML(text.slice(0, phraseStart));
+    const phraseText = text.slice(phraseStart, phraseEnd);
+    const afterPhrase = escapeHTML(text.slice(phraseEnd));
+
+    const beforeWord = escapeHTML(phraseText.slice(0, wordStart));
+    const word = escapeHTML(phraseText.slice(wordStart, wordEnd));
+    const afterWord = escapeHTML(phraseText.slice(wordEnd));
+
+    highlight.innerHTML = `${beforePhrase}<span class="phrase">${beforeWord}<span class="word">${word}</span>${afterWord}</span>${afterPhrase}`;
+  }
+
+  function getCursorIndex(range, root) {
+    let index = 0;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node === range.startContainer) {
+        return index + range.startOffset;
+      }
+      index += node.textContent.length;
+    }
+    return null;
+  }
+
+  function findPhrase(text, index) {
+    const sentenceEnd = /[.!?]/g;
+    let start = 0, end = text.length;
+
+    for (let match of text.matchAll(sentenceEnd)) {
+      if (match.index < index) start = match.index + 1;
+      if (match.index >= index) {
+        end = match.index + 1;
+        break;
+      }
+    }
+    return { phraseStart: start, phraseEnd: end };
+  }
+
+  function findWord(text, index) {
+    const isWordChar = c => /\w/.test(c);
+    let start = index, end = index;
+
+    while (start > 0 && isWordChar(text[start - 1])) start--;
+    while (end < text.length && isWordChar(text[end])) end++;
+
+    return { wordStart: start, wordEnd: end };
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
+  // Initialize
+  updateHighlight();
+</script>

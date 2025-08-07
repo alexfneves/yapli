@@ -28,7 +28,7 @@ void listFiles(const char* path) {
 // and returns the rendered HTML as a std::string.
 extern "C" {
 EMSCRIPTEN_KEEPALIVE
-const char* render(const char* contextStr) {
+const char* render(const char* component, const char* contextStr) {
     try {
         listFiles("/");
         static std::string resultStorage; // static to avoid dangling pointer
@@ -38,7 +38,9 @@ const char* render(const char* contextStr) {
         json context = json::parse(contextStr);
 
         // Render the template
-        resultStorage = env.render_file("/asdf.html", context);
+        std::string file = "/" + std::string(component) + ".html";
+        std::cout << file << std::endl;
+        resultStorage = env.render_file(file, context);
 
         // Return a pointer to the result (lives in static storage)
         return resultStorage.c_str();
