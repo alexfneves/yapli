@@ -3,7 +3,18 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>Inja WASM Demo</title>
+  <title>ABCD Inja WASM Demo</title>
+
+  <script>
+  (function () {
+    const socket = new WebSocket("ws://127.0.0.1:1234");
+    socket.onopen = () => console.log("✅ Connected to reload server");
+    socket.onmessage = (msg) => {
+      console.log("📨 Received reload:", msg.data);
+      location.reload();
+    };
+  })();
+  </script>
   
   <style>
     .container {
@@ -60,34 +71,68 @@
   <div id="fdsa">Loading...</div>
 
 
-  <script src="out.js"></script>
+  <!-- <script src="out.js"></script> -->
   <script>
     const context = {
       name: "Alice",
       color: "blue"
     };
-
-    createModule().then((Module) => {
-      const render = Module.cwrap('render', 'string', ['string', 'string']);
-      let result = render("asdf", JSON.stringify(context));
-      document.getElementById("asdf").innerHTML = result;
-      <!-- result = render("fdsa", JSON.stringify(context)); -->
-      <!-- document.getElementById("fdsa").innerHTML = result; -->
-      
-      result = render("fdsa", JSON.stringify(context));
-      const container = document.getElementById("fdsa");
-      container.innerHTML = result;
-
-      // ✅ Re-run <script> blocks from injected HTML
-      const scripts = container.querySelectorAll("script");
-      scripts.forEach(oldScript => {
-        const newScript = document.createElement("script");
-        newScript.text = oldScript.textContent;
-        document.head.appendChild(newScript);
-        oldScript.remove();
+    
+    (async function () {
+      // Load out.js with cache-busting query
+      await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = `out.js?v=${Math.random()}`;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
       });
-    });
+
+      createModule().then((Module) => {
+        const render = Module.cwrap('render', 'string', ['string', 'string']);
+        let result = render("asdf", JSON.stringify(context));
+        document.getElementById("asdf").innerHTML = result;
+        <!-- result = render("fdsa", JSON.stringify(context)); -->
+        <!-- document.getElementById("fdsa").innerHTML = result; -->
+      
+        result = render("fdsa", JSON.stringify(context));
+        const container = document.getElementById("fdsa");
+        container.innerHTML = result;
+
+        // ✅ Re-run <script> blocks from injected HTML
+        const scripts = container.querySelectorAll("script");
+        scripts.forEach(oldScript => {
+          const newScript = document.createElement("script");
+          newScript.text = oldScript.textContent;
+          document.head.appendChild(newScript);
+          oldScript.remove();
+        });
+      });
+    })();
   </script>
+  <!-- <script> -->
+    <!-- let lastVersion = null; -->
+
+    <!-- async function checkForReload() { -->
+      <!-- try { -->
+        <!-- const res = await fetch("reload.txt", { cache: "no-store" }); -->
+        <!-- const text = await res.text(); -->
+
+        <!-- if (lastVersion && text.trim() !== lastVersion) { -->
+          <!-- console.log("Change detected, reloading..."); -->
+          <!-- location.reload(true); -->
+        <!-- } -->
+
+        <!-- lastVersion = text.trim(); -->
+      <!-- } catch (err) { -->
+        <!-- console.error("Reload check failed", err); -->
+      <!-- } -->
+
+      <!-- setTimeout(checkForReload, 1000); // check every second -->
+    <!-- } -->
+
+    <!-- checkForReload(); -->
+  <!-- </script> -->
 
 </body>
 </html>

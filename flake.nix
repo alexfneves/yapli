@@ -37,17 +37,20 @@
                     pkgs.nlohmann_json
                     pkgs.inja
                     pkgs.http-server
+                    # pkgs.watchexec
+                    pkgs.websocat
+                    pkgs.inotify-tools
                   ];
 
                   enterShell = ''
                     echo "Yet Another Platform for Learning Idioms"
                   '';
 
-
                   scripts = {
                     build.exec = ''
                       export INJA_INCLUDE_PATH=${pkgs.inja}/include
                       export JSON_INCLUDE_PATH=${pkgs.nlohmann_json}/include
+                      echo "Building"
                       emcc src/main.cpp \
                         -std=c++17 \
                         -I"$INJA_INCLUDE_PATH" \
@@ -66,10 +69,15 @@
                         --preload-file templates@/ \
                         --bind \
                         -o public/out.js
+                      echo "Finishing building and sending the reload message to the websockets"
+                      echo "reload" | websocat ws://127.0.0.1:1234
                     '';
                   };
-                  processes.serve.exec = "http-server -p 8080 .";
-
+                  processes = {
+                    serve.exec = "http-server -p 8080 . -c-1";
+                    watch.exec = "bash ./watch.bash";
+                    reload-server.exec = "websocat -E -t ws-l:127.0.0.1:1234 broadcast:mirror:";
+                  };
                 }
               ];
             };
