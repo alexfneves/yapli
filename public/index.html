@@ -1,76 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-  <meta id="head"> </meta>
-</head>
-<body>
-  <div id="main">Loading...</div>
-  <script>
-    (function () {
-      const socket = new WebSocket("ws://127.0.0.1:1234");
-      socket.onopen = () => console.log("✅ Connected to reload server");
-      socket.onmessage = (msg) => {
-        console.log("📨 Received reload:", msg.data);
-        location.reload();
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <meta id="head" />
+  </head>
+  <body>
+    <div id="main">Loading...</div>
+    <script>
+      (function () {
+        const socket = new WebSocket("ws://127.0.0.1:1234");
+        socket.onopen = () => console.log("✅ Connected to reload server");
+        socket.onmessage = (msg) => {
+          console.log("📨 Received reload:", msg.data);
+          location.reload();
+        };
+      })();
+      const context = {
+        name: "Alice",
+        color: "blue",
       };
-    })();
-    const context = {
-      name: "Alice",
-      color: "blue"
-    };
 
-    function rerunHeadScripts() {
-      const elements = document.head.querySelectorAll("script");
-      let newScripts = []
-      elements.forEach(oldElement=> {
-        const newElement = oldElement
-        newScripts.push(newElement)
-        oldElement.remove();
-      });
-      newScripts.forEach(newScript => {
-        document.head.appendChild(newScript);
-      });
-    }
+      function rerunHeadScripts() {
+        const elements = document.head.querySelectorAll("script");
+        let newScripts = [];
+        elements.forEach((oldElement) => {
+          const newElement = oldElement;
+          newScripts.push(newElement);
+          oldElement.remove();
+        });
+        newScripts.forEach((newScript) => {
+          document.head.appendChild(newScript);
+        });
+      }
 
-    function rerunScripts(container) {
-      const elements = container.querySelectorAll("script");
+      function rerunScripts(container) {
+        const elements = container.querySelectorAll("script");
 
-      elements.forEach(oldElement => {
-        const newElement = document.createElement("script");
-        for (let attr of oldElement.attributes) {
-          newElement.setAttribute(attr.name, attr.value);
-        }
-    if (!oldElement.src) {
-          newElement.textContent = oldElement.textContent;
-        }
-        document.head.appendChild(newElement);
-        oldElement.remove();
-      });
-    }
-  
-    (async function () {
-      await new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = `out.js?v=${Math.random()}`;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
+        elements.forEach((oldElement) => {
+          const newElement = document.createElement("script");
+          for (let attr of oldElement.attributes) {
+            newElement.setAttribute(attr.name, attr.value);
+          }
+          if (!oldElement.src) {
+            newElement.textContent = oldElement.textContent;
+          }
+          document.head.appendChild(newElement);
+          oldElement.remove();
+        });
+      }
 
-      createModule().then((Module) => {
-        const render = Module.cwrap('render', 'string', ['string', 'string']);
-        let result = render("head", JSON.stringify(context));
-        let container = document.getElementById("head");
-        container.innerHTML = result;
-        rerunScripts(container);
-        result = render("body", JSON.stringify(context));
-        container = document.getElementById("main");
-        container.innerHTML = result;
-        rerunScripts(container);
-      });
-    })();
-  </script>
-</body>
+      (async function () {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `out.js?v=${Math.random()}`;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+
+        createModule().then((Module) => {
+          const render = Module.cwrap("render", "string", ["string", "string"]);
+          let result = render("head", JSON.stringify(context));
+          let container = document.getElementById("head");
+          container.innerHTML = result;
+          rerunScripts(container);
+          result = render("body", JSON.stringify(context));
+          container = document.getElementById("main");
+          container.innerHTML = result;
+          rerunScripts(container);
+        });
+      })();
+    </script>
+  </body>
 </html>

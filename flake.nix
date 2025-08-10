@@ -37,10 +37,15 @@
                     pkgs.nlohmann_json
                     pkgs.inja
                     pkgs.http-server
-                    # pkgs.watchexec
                     pkgs.websocat
                     pkgs.inotify-tools
                   ];
+
+                  git-hooks.excludes = [ ".devenv" ];
+                  git-hooks.hooks = {
+                    clang-format.enable = true;
+                    prettier.enable = true;
+                  };
 
                   enterShell = ''
                     echo "Yet Another Platform for Learning Idioms"
