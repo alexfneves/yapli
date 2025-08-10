@@ -1,85 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-  <meta charset="UTF-8">
-  <title>ABCD Inja WASM Demo</title>
-
-  <script>
-  (function () {
-    const socket = new WebSocket("ws://127.0.0.1:1234");
-    socket.onopen = () => console.log("✅ Connected to reload server");
-    socket.onmessage = (msg) => {
-      console.log("📨 Received reload:", msg.data);
-      location.reload();
-    };
-  })();
-  </script>
-  
-  <style>
-    .container {
-      position: relative;
-      width: 600px;
-      font-family: sans-serif;
-    }
-
-    .highlight-layer,
-    .input-layer {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      padding: 10px;
-      border: 1px solid #ccc;
-      min-height: 100px;
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    .highlight-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      color: transparent;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .highlight-layer .word {
-      background-color: yellow;
-      color: black;
-    }
-
-    .highlight-layer .phrase {
-      background-color: lightblue;
-      color: black;
-    }
-
-    .input-layer {
-      position: relative;
-      background: transparent;
-      color: black;
-      z-index: 2;
-      caret-color: black;
-    }
-
-    .input-layer:focus {
-      outline: none;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <meta id="head"> </meta>
 </head>
 <body>
-  <div id="asdf">Loading...</div>
-  <div id="fdsa">Loading...</div>
-
-
-  <!-- <script src="out.js"></script> -->
+  <div id="main">Loading...</div>
   <script>
+    (function () {
+      const socket = new WebSocket("ws://127.0.0.1:1234");
+      socket.onopen = () => console.log("✅ Connected to reload server");
+      socket.onmessage = (msg) => {
+        console.log("📨 Received reload:", msg.data);
+        location.reload();
+      };
+    })();
     const context = {
       name: "Alice",
       color: "blue"
     };
-    
+
+    function rerunHeadScripts() {
+      const elements = document.head.querySelectorAll("script");
+      let newScripts = []
+      elements.forEach(oldElement=> {
+        const newElement = oldElement
+        newScripts.push(newElement)
+        oldElement.remove();
+      });
+      newScripts.forEach(newScript => {
+        document.head.appendChild(newScript);
+      });
+    }
+
+    function rerunScripts(container) {
+      const elements = container.querySelectorAll("script");
+
+      elements.forEach(oldElement => {
+        const newElement = document.createElement("script");
+        for (let attr of oldElement.attributes) {
+          newElement.setAttribute(attr.name, attr.value);
+        }
+    if (!oldElement.src) {
+          newElement.textContent = oldElement.textContent;
+        }
+        document.head.appendChild(newElement);
+        oldElement.remove();
+      });
+    }
+  
     (async function () {
-      // Load out.js with cache-busting query
       await new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src = `out.js?v=${Math.random()}`;
@@ -90,49 +61,16 @@
 
       createModule().then((Module) => {
         const render = Module.cwrap('render', 'string', ['string', 'string']);
-        let result = render("asdf", JSON.stringify(context));
-        document.getElementById("asdf").innerHTML = result;
-        <!-- result = render("fdsa", JSON.stringify(context)); -->
-        <!-- document.getElementById("fdsa").innerHTML = result; -->
-      
-        result = render("fdsa", JSON.stringify(context));
-        const container = document.getElementById("fdsa");
+        let result = render("head", JSON.stringify(context));
+        let container = document.getElementById("head");
         container.innerHTML = result;
-
-        // ✅ Re-run <script> blocks from injected HTML
-        const scripts = container.querySelectorAll("script");
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement("script");
-          newScript.text = oldScript.textContent;
-          document.head.appendChild(newScript);
-          oldScript.remove();
-        });
+        rerunScripts(container);
+        result = render("body", JSON.stringify(context));
+        container = document.getElementById("main");
+        container.innerHTML = result;
+        rerunScripts(container);
       });
     })();
   </script>
-  <!-- <script> -->
-    <!-- let lastVersion = null; -->
-
-    <!-- async function checkForReload() { -->
-      <!-- try { -->
-        <!-- const res = await fetch("reload.txt", { cache: "no-store" }); -->
-        <!-- const text = await res.text(); -->
-
-        <!-- if (lastVersion && text.trim() !== lastVersion) { -->
-          <!-- console.log("Change detected, reloading..."); -->
-          <!-- location.reload(true); -->
-        <!-- } -->
-
-        <!-- lastVersion = text.trim(); -->
-      <!-- } catch (err) { -->
-        <!-- console.error("Reload check failed", err); -->
-      <!-- } -->
-
-      <!-- setTimeout(checkForReload, 1000); // check every second -->
-    <!-- } -->
-
-    <!-- checkForReload(); -->
-  <!-- </script> -->
-
 </body>
 </html>

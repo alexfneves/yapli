@@ -1,0 +1,55 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ABCD Inja WASM Demo</title>
+<style>
+  [x-cloak] { display: none !important; }
+
+  .container {
+    position: relative;
+    width: 600px;
+    font-family: sans-serif;
+  }
+
+  .highlight-layer,
+  .input-layer {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 10px;
+    border: 1px solid #ccc;
+    min-height: 100px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .highlight-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: transparent;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .highlight-layer .word {
+    background-color: yellow;
+    color: black;
+  }
+
+  .highlight-layer .phrase {
+    background-color: lightblue;
+    color: black;
+  }
+
+  .input-layer {
+    position: relative;
+    background: transparent;
+    color: black;
+    z-index: 2;
+    caret-color: black;
+  }
+
+  .input-layer:focus {
+    outline: none;
+  }
+</style>
+
