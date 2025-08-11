@@ -74,6 +74,9 @@
                         --preload-file templates@/ \
                         --bind \
                         -o public/out.js
+                    '';
+                    hot-reload.exec = ''
+                      build
                       echo "Finishing building and sending the reload message to the websockets"
                       echo "reload" | websocat ws://127.0.0.1:1234
                     '';

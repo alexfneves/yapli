@@ -27,5 +27,5 @@ while true; do
     $WATCH_DIRS >/dev/null
 
   echo "🔁 Change detected, running build..."
-  build || true
+  hot-reload || true
 done
