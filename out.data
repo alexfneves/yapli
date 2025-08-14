@@ -1,0 +1,284 @@
+<h1>Hello2, {{ name }}!</h1>
+<p>Your favorite color is {{ color }}.</p>
+<body class="flex flex-col min-h-screen bg-gray-50">
+  <!-- Header (floating on small screens, fixed on desktop) -->
+  <header
+    x-ref="header"
+    x-bind:class="{
+      'fixed top-0 left-0 right-0 z-50': true,
+      'translate-y-0': !isHidden,
+      '-translate-y-full': isHidden
+    }"
+    class="transition-transform duration-300 ease-in-out bg-blue-600 text-white p-4 flex justify-between items-center"
+  >
+    <h1 class="text-xl font-bold">My Website</h1>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex space-x-6">
+      <a href="#" class="hover:underline">Home</a>
+      <a href="#" class="hover:underline">About</a>
+      <a href="#" class="hover:underline">Services</a>
+      <a href="#" class="hover:underline">Contact</a>
+    </nav>
+
+    <!-- Hamburger Icon -->
+    <button @click="open = !open" class="md:hidden focus:outline-none">
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <div
+    x-show="open"
+    x-cloak
+    class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+    @click="open = false"
+  ></div>
+  <aside
+    x-show="open"
+    x-cloak
+    class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 md:hidden"
+    :class="{ '-translate-x-0': open, '-translate-x-full': !open }"
+  >
+    <div class="p-4 border-b flex justify-between items-center">
+      <h2 class="text-lg font-semibold">Menu</h2>
+      <button @click="open = false" class="text-gray-500 hover:text-black">
+        ✕
+      </button>
+    </div>
+    <nav class="p-4 space-y-4">
+      <a href="#" class="block text-gray-700 hover:underline">Home</a>
+      <a href="#" class="block text-gray-700 hover:underline">About</a>
+      <a href="#" class="block text-gray-700 hover:underline">Services</a>
+      <a href="#" class="block text-gray-700 hover:underline">Contact</a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 pt-20 md:pt-24 px-4 pb-24" @scroll.window="handleScroll">
+    <div class="max-w-3xl mx-auto space-y-8">
+      <h2 class="text-2xl font-bold">Welcome</h2>
+      <p>
+        Scroll down to hide the header. Scroll up to reveal it. On mobile, it's
+        a floating bar. On desktop, it's fixed at the top.
+      </p>
+      <!-- Dummy content to allow scrolling -->
+      <template x-for="i in 50" :key="i">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
+          odio. Praesent libero. Sed cursus ante dapibus diam.
+        </p>
+      </template>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-200 text-center p-4 md:fixed bottom-0 left-0 right-0">
+    &copy; 2025 My Website. All rights reserved.
+  </footer>
+
+  <!-- Alpine.js Logic -->
+  <script>
+    function layout() {
+      return {
+        open: false,
+        isHidden: false,
+        lastScrollY: window.scrollY,
+        init() {
+          window.addEventListener("resize", this.handleResize.bind(this));
+        },
+        handleResize() {
+          if (window.innerWidth >= 768) {
+            this.isHidden = false;
+          }
+        },
+        handleScroll() {
+          const currentScroll = window.scrollY;
+          const isMobile = window.innerWidth < 768;
+
+          if (!isMobile) return;
+
+          if (currentScroll > this.lastScrollY + 5) {
+            // Scroll down
+            this.isHidden = true;
+          } else if (currentScroll < this.lastScrollY - 5) {
+            // Scroll up
+            this.isHidden = false;
+          }
+
+          this.lastScrollY = currentScroll;
+        },
+      };
+    }
+  </script>
+</body>
+<div class="container">
+  <div id="highlight" class="highlight-layer" aria-hidden="true"></div>
+  <div id="input" class="input-layer" contenteditable="true" spellcheck="false">
+    This is a sample sentence. Here is another phrase with different words.
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById("input");
+  const highlight = document.getElementById("highlight");
+
+  // Prevent typing or editing
+  input.addEventListener("beforeinput", (e) => e.preventDefault());
+
+  input.addEventListener("keyup", updateHighlight);
+  input.addEventListener("mouseup", updateHighlight);
+
+  function updateHighlight() {
+    const text = input.innerText;
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    const pos = getCursorIndex(range, input);
+    if (pos == null) return;
+
+    const { phraseStart, phraseEnd } = findPhrase(text, pos);
+    const { wordStart, wordEnd } = findWord(
+      text.slice(phraseStart, phraseEnd),
+      pos - phraseStart,
+    );
+
+    const beforePhrase = escapeHTML(text.slice(0, phraseStart));
+    const phraseText = text.slice(phraseStart, phraseEnd);
+    const afterPhrase = escapeHTML(text.slice(phraseEnd));
+
+    const beforeWord = escapeHTML(phraseText.slice(0, wordStart));
+    const word = escapeHTML(phraseText.slice(wordStart, wordEnd));
+    const afterWord = escapeHTML(phraseText.slice(wordEnd));
+
+    highlight.innerHTML = `${beforePhrase}<span class="phrase">${beforeWord}<span class="word">${word}</span>${afterWord}</span>${afterPhrase}`;
+  }
+
+  function getCursorIndex(range, root) {
+    let index = 0;
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false,
+    );
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node === range.startContainer) {
+        return index + range.startOffset;
+      }
+      index += node.textContent.length;
+    }
+    return null;
+  }
+
+  function findPhrase(text, index) {
+    const sentenceEnd = /[.!?]/g;
+    let start = 0,
+      end = text.length;
+
+    for (let match of text.matchAll(sentenceEnd)) {
+      if (match.index < index) start = match.index + 1;
+      if (match.index >= index) {
+        end = match.index + 1;
+        break;
+      }
+    }
+    return { phraseStart: start, phraseEnd: end };
+  }
+
+  function findWord(text, index) {
+    const isWordChar = (c) => /\w/.test(c);
+    let start = index,
+      end = index;
+
+    while (start > 0 && isWordChar(text[start - 1])) start--;
+    while (end < text.length && isWordChar(text[end])) end++;
+
+    return { wordStart: start, wordEnd: end };
+  }
+
+  function escapeHTML(str) {
+    return str.replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c],
+    );
+  }
+
+  // Initialize
+  updateHighlight();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ABCD Inja WASM Demo</title>
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+
+  .container {
+    position: relative;
+    width: 600px;
+    font-family: sans-serif;
+  }
+
+  .highlight-layer,
+  .input-layer {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 10px;
+    border: 1px solid #ccc;
+    min-height: 100px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .highlight-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: transparent;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .highlight-layer .word {
+    background-color: yellow;
+    color: black;
+  }
+
+  .highlight-layer .phrase {
+    background-color: lightblue;
+    color: black;
+  }
+
+  .input-layer {
+    position: relative;
+    background: transparent;
+    color: black;
+    z-index: 2;
+    caret-color: black;
+  }
+
+  .input-layer:focus {
+    outline: none;
+  }
+</style>
