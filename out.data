@@ -122,6 +122,75 @@
     }
   </script>
 </body>
+<!doctype html>
+<html lang="en" class="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailwind Semantic Colors (CDN)</title>
+
+    <!-- Load Tailwind from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind config override -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "var(--color-primary)",
+              background: "var(--color-background)",
+              foreground: "var(--color-foreground)",
+              selection: "var(--color-selection)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Custom CSS variables (light + dark theme) -->
+    <style>
+      :root {
+        --color-primary: #3b82f6; /* blue-500 */
+        --color-background: #ffffff;
+        --color-foreground: #1f2937; /* gray-800 */
+        --color-selection: #93c5fd; /* blue-300 */
+      }
+
+      .dark {
+        --color-primary: #2563eb; /* blue-600 */
+        --color-background: #111827;
+        --color-foreground: #f9fafb; /* gray-50 */
+        --color-selection: #818cf8; /* indigo-300 */
+      }
+
+      ::selection {
+        background-color: var(--color-selection);
+        color: white;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-foreground min-h-screen flex flex-col items-center justify-center gap-6 p-10"
+  >
+    <h1 class="text-4xl font-bold text-primary">Hello, Semantic Colors!</h1>
+
+    <p class="text-lg">
+      Try selecting this text — it uses a semantic <code>selection</code> color.
+    </p>
+
+    <button class="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90">
+      Primary Button
+    </button>
+
+    <button
+      onclick="document.documentElement.classList.toggle('dark')"
+      class="mt-6 border px-4 py-1 rounded"
+    >
+      Toggle Dark Mode
+    </button>
+  </body>
+</html>
 <div class="container">
   <div id="highlight" class="highlight-layer" aria-hidden="true"></div>
   <div id="input" class="input-layer" contenteditable="true" spellcheck="false">
