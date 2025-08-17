@@ -2,14 +2,15 @@
 <html>
   <head>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-      defer
-    ></script>
     <meta id="head" />
   </head>
   <body>
-    <div id="main">Loading...</div>
+    <div
+      id="main"
+      class="flex flex-col min-h-screen bg-gray-100 text-gray-900 relative"
+    >
+      Loading...
+    </div>
     <script>
       (function () {
         const socket = new WebSocket("ws://127.0.0.1:1234");
@@ -48,7 +49,7 @@
           if (!oldElement.src) {
             newElement.textContent = oldElement.textContent;
           }
-          document.head.appendChild(newElement);
+          container.appendChild(newElement);
           oldElement.remove();
         });
       }
