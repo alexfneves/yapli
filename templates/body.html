@@ -1,122 +1,209 @@
-<body class="flex flex-col min-h-screen bg-gray-50">
-  <!-- Header (floating on small screens, fixed on desktop) -->
-  <header
-    x-ref="header"
-    x-bind:class="{
-      'fixed top-0 left-0 right-0 z-50': true,
-      'translate-y-0': !isHidden,
-      '-translate-y-full': isHidden
-    }"
-    class="transition-transform duration-300 ease-in-out bg-blue-600 text-white p-4 flex justify-between items-center"
+<!-- Main Content -->
+<main id="main-content" class="flex-grow p-6">
+  <h1 class="text-2xl font-bold">Home</h1>
+  <p class="mt-2">Welcome to the home page.</p>
+</main>
+
+<!-- Tabs -->
+<div
+  id="tabs-bar"
+  class="hidden border-t border-gray-300 bg-white px-4 py-2 flex space-x-2"
+>
+  <!-- Tabs go here -->
+</div>
+
+<footer
+  class="flex justify-between items-center px-4 py-2 border-t bg-white text-sm relative h-12"
+>
+  <!-- Hamburger (mobile only) -->
+  <button
+    id="hamburger"
+    class="md:hidden text-2xl"
+    onclick="toggleMobileMenu()"
   >
-    <h1 class="text-xl font-bold">My Website</h1>
+    &#9776;
+  </button>
 
-    <!-- Desktop Nav -->
-    <nav class="hidden md:flex space-x-6">
-      <a href="#" class="hover:underline">Home</a>
-      <a href="#" class="hover:underline">About</a>
-      <a href="#" class="hover:underline">Services</a>
-      <a href="#" class="hover:underline">Contact</a>
-    </nav>
+  <!-- Footer info, always shown (but truncated if needed) -->
+  <div id="footer-info" class="truncate text-xs sm:text-sm ml-2 flex-1">
+    Currently viewing: Home
+  </div>
 
-    <!-- Hamburger Icon -->
-    <button @click="open = !open" class="md:hidden focus:outline-none">
-      <svg
-        class="w-6 h-6"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
+  <!-- Language and help -->
+  <div class="flex items-center space-x-2">
+    <span id="language">[en]</span>
+    <button id="help-button" class="hover:text-blue-600 text-lg">?</button>
+  </div>
+</footer>
+
+<!-- Floating Action Menu (Desktop only) -->
+<div
+  id="action-menu"
+  class="hidden absolute right-0 bottom-12 bg-white border rounded-tl shadow-lg p-4 space-y-2 z-10"
+>
+  <button onclick="openTab('Dictionary')" class="block w-full text-left">
+    Open Dictionary
+  </button>
+  <button onclick="openTab('Document')" class="block w-full text-left">
+    Open Document
+  </button>
+  <button onclick="openTab('Conversation')" class="block w-full text-left">
+    Open Conversation
+  </button>
+  <button onclick="openTab('Video')" class="block w-full text-left">
+    Open Video
+  </button>
+</div>
+
+<!-- Mobile Menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 bg-white z-50 hidden flex flex-col p-6"
+>
+  <div class="flex items-center justify-between mb-4">
+    <button onclick="toggleMobileMenu()" class="text-2xl font-bold">
+      &lt;
     </button>
-  </header>
-
-  <!-- Mobile Sidebar -->
-  <div
-    x-show="open"
-    x-cloak
-    class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-    @click="open = false"
-  ></div>
-  <aside
-    x-show="open"
-    x-cloak
-    class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 md:hidden"
-    :class="{ '-translate-x-0': open, '-translate-x-full': !open }"
+    <span class="text-lg font-semibold">Menu</span>
+  </div>
+  <button
+    onclick="openTab('Dictionary'); toggleMobileMenu()"
+    class="mb-2 text-left"
   >
-    <div class="p-4 border-b flex justify-between items-center">
-      <h2 class="text-lg font-semibold">Menu</h2>
-      <button @click="open = false" class="text-gray-500 hover:text-black">
-        ✕
-      </button>
-    </div>
-    <nav class="p-4 space-y-4">
-      <a href="#" class="block text-gray-700 hover:underline">Home</a>
-      <a href="#" class="block text-gray-700 hover:underline">About</a>
-      <a href="#" class="block text-gray-700 hover:underline">Services</a>
-      <a href="#" class="block text-gray-700 hover:underline">Contact</a>
-    </nav>
-  </aside>
+    Open Dictionary
+  </button>
+  <button
+    onclick="openTab('Document'); toggleMobileMenu()"
+    class="mb-2 text-left"
+  >
+    Open Document
+  </button>
+  <button
+    onclick="openTab('Conversation'); toggleMobileMenu()"
+    class="mb-2 text-left"
+  >
+    Open Conversation
+  </button>
+  <button onclick="openTab('Video'); toggleMobileMenu()" class="mb-2 text-left">
+    Open Video
+  </button>
+</div>
 
-  <!-- Main content -->
-  <main class="flex-1 pt-20 md:pt-24 px-4 pb-24" @scroll.window="handleScroll">
-    <div class="max-w-3xl mx-auto space-y-8">
-      <h2 class="text-2xl font-bold">Welcome</h2>
-      <p>
-        Scroll down to hide the header. Scroll up to reveal it. On mobile, it's
-        a floating bar. On desktop, it's fixed at the top.
-      </p>
-      <!-- Dummy content to allow scrolling -->
-      <template x-for="i in 50" :key="i">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
-          odio. Praesent libero. Sed cursus ante dapibus diam.
-        </p>
-      </template>
-    </div>
-  </main>
+<!-- Shortcut Modal -->
+<div
+  id="shortcut-modal"
+  class="fixed inset-0 flex items-center justify-center hidden z-50"
+>
+  <div class="bg-white p-6 rounded shadow-lg w-96">
+    <h2 class="text-lg font-semibold mb-4">Keyboard Shortcuts</h2>
+    <table class="w-full text-sm border">
+      <tr class="border-b">
+        <td class="py-1 px-2 font-mono">?</td>
+        <td class="py-1 px-2">Show shortcuts</td>
+      </tr>
+      <tr class="border-b">
+        <td class="py-1 px-2 font-mono">Space</td>
+        <td class="py-1 px-2">Open action menu</td>
+      </tr>
+      <tr>
+        <td class="py-1 px-2 font-mono">X</td>
+        <td class="py-1 px-2">Close tab</td>
+      </tr>
+    </table>
+    <button
+      onclick="toggleModal()"
+      class="mt-4 px-4 py-1 bg-blue-600 text-white rounded"
+    >
+      Close
+    </button>
+  </div>
+</div>
 
-  <!-- Footer -->
-  <footer class="bg-gray-200 text-center p-4 md:fixed bottom-0 left-0 right-0">
-    &copy; 2025 My Website. All rights reserved.
-  </footer>
+<!-- JavaScript -->
+<script>
+  const mainContent = document.getElementById("main-content");
+  const footerInfo = document.getElementById("footer-info");
+  const tabsBar = document.getElementById("tabs-bar");
+  const shortcutModal = document.getElementById("shortcut-modal");
+  const actionMenu = document.getElementById("action-menu");
+  const mobileMenu = document.getElementById("mobile-menu");
 
-  <!-- Alpine.js Logic -->
-  <script>
-    function layout() {
-      return {
-        open: false,
-        isHidden: false,
-        lastScrollY: window.scrollY,
-        init() {
-          window.addEventListener("resize", this.handleResize.bind(this));
-        },
-        handleResize() {
-          if (window.innerWidth >= 768) {
-            this.isHidden = false;
-          }
-        },
-        handleScroll() {
-          const currentScroll = window.scrollY;
-          const isMobile = window.innerWidth < 768;
+  let tabs = [];
 
-          if (!isMobile) return;
+  function setContent(type) {
+    mainContent.innerHTML = `<h1 class="text-2xl font-bold">${type}</h1><p class="mt-2">This is the ${type.toLowerCase()} view.</p>`;
+    footerInfo.textContent = `Currently viewing: ${type}`;
+  }
 
-          if (currentScroll > this.lastScrollY + 5) {
-            // Scroll down
-            this.isHidden = true;
-          } else if (currentScroll < this.lastScrollY - 5) {
-            // Scroll up
-            this.isHidden = false;
-          }
-
-          this.lastScrollY = currentScroll;
-        },
-      };
+  function openTab(type) {
+    if (type === "Home") {
+      tabsBar.classList.add("hidden");
+      tabs = [];
+      tabsBar.innerHTML = "";
+      setContent("Home");
+      return;
     }
-  </script>
-</body>
+
+    if (!tabs.includes(type)) {
+      tabs.push(type);
+      const tab = document.createElement("div");
+      tab.className =
+        "bg-gray-200 px-3 py-1 rounded flex items-center space-x-2";
+      tab.innerHTML = `<span>${type}</span> <button class="text-red-500" onclick="event.stopPropagation(); closeTab('${type}')">X</button>`;
+      tab.onclick = () => switchTab(type);
+      tabsBar.appendChild(tab);
+      tabsBar.classList.remove("hidden");
+    }
+
+    switchTab(type);
+  }
+
+  function switchTab(type) {
+    setContent(type);
+  }
+
+  function closeTab(type) {
+    tabs = tabs.filter((t) => t !== type);
+    const tabDivs = tabsBar.querySelectorAll("div");
+    tabDivs.forEach((div) => {
+      if (div.textContent.includes(type)) {
+        div.remove();
+      }
+    });
+
+    if (tabs.length === 0) {
+      openTab("Home");
+    } else {
+      switchTab(tabs[tabs.length - 1]);
+    }
+  }
+
+  function toggleModal() {
+    shortcutModal.classList.toggle("hidden");
+  }
+
+  function toggleActionMenu() {
+    actionMenu.classList.toggle("hidden");
+  }
+
+  function toggleMobileMenu() {
+    mobileMenu.classList.toggle("hidden");
+  }
+
+  // Keyboard handlers
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "?") {
+      e.preventDefault();
+      toggleModal();
+    }
+    if (e.key === " ") {
+      e.preventDefault();
+      toggleActionMenu();
+    }
+  });
+
+  document.getElementById("help-button").addEventListener("click", toggleModal);
+
+  // Initial view
+  openTab("Home");
+</script>
