@@ -385,3 +385,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>YAPLI</title>
+<style>
+  :root {
+    --app-height: 100vh;
+  }
+  .safe-screen {
+    min-height: var(--app-height);
+  }
+</style>

@@ -7,7 +7,7 @@
   <body>
     <div
       id="main"
-      class="flex flex-col min-h-screen bg-gray-100 text-gray-900 relative"
+      class="flex flex-col safe-screen bg-gray-100 text-gray-900 relative"
     >
       Loading...
     </div>
@@ -75,6 +75,15 @@
           rerunScripts(container);
         });
       })();
+
+      function setAppHeight() {
+        const doc = document.documentElement;
+        doc.style.setProperty("--app-height", `${window.innerHeight}px`);
+      }
+
+      window.addEventListener("resize", setAppHeight);
+      window.addEventListener("orientationchange", setAppHeight);
+      setAppHeight();
     </script>
   </body>
 </html>
