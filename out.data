@@ -17,44 +17,39 @@
 <footer
   class="flex justify-between items-center px-4 py-2 border-t bg-white text-sm relative h-12"
 >
-  <!-- Hamburger (mobile only) -->
-  <button
-    id="hamburger"
-    class="md:hidden text-2xl"
-    onclick="toggleMobileMenu()"
-  >
-    &#9776;
-  </button>
-
   <!-- Footer info, always shown (but truncated if needed) -->
-  <div id="footer-info" class="truncate text-xs sm:text-sm ml-2 flex-1">
+  <div id="footer-info" class="truncate text-xs ml-2 flex-1">
     Currently viewing: Home
   </div>
 
   <!-- Language and help -->
   <div class="flex items-center space-x-2">
     <span id="language">[en]</span>
-    <button id="help-button" class="hover:text-blue-600 text-lg">?</button>
+
+    <button id="help-button" class="text-lg" onclick="toggleModal()">?</button>
+    <!-- Hamburger (mobile only) -->
+    <button id="hamburger" class="text-2xl" onclick="toggleActionMenu()">
+      &#9776;
+    </button>
   </div>
 </footer>
 
 <!-- Floating Action Menu (Desktop only) -->
 <div
   id="action-menu"
-  class="hidden absolute right-0 bottom-12 bg-white border rounded-tl shadow-lg p-4 space-y-2 z-10"
+  class="hidden absolute right-0 bottom-12 border rounded-tl shadow-lg p-4 space-y-2 z-10 bg-gray-400 p-1.5 box-border"
 >
-  <button onclick="openTab('Dictionary')" class="block w-full text-left">
-    Open Dictionary
-  </button>
-  <button onclick="openTab('Document')" class="block w-full text-left">
-    Open Document
-  </button>
-  <button onclick="openTab('Conversation')" class="block w-full text-left">
-    Open Conversation
-  </button>
-  <button onclick="openTab('Video')" class="block w-full text-left">
-    Open Video
-  </button>
+  <div class="relative border-2 border-black p-5 bg-gray-400 box-border">
+    <div
+      class="absolute top-0 left-4 -translate-y-1/2 bg-gray-400 px-2 font-bold text-sm"
+    >
+      Menu
+    </div>
+    <div onclick="openTab('Dictionary')" class="my-1.5">Dictionary</div>
+    <div onclick="openTab('Document')" class="my-1.5">Document</div>
+    <div onclick="openTab('Conversation')" class="my-1.5">Conversation</div>
+    <div onclick="openTab('Video')" class="my-1.5">Video</div>
+  </div>
 </div>
 
 <!-- Mobile Menu -->
@@ -63,30 +58,30 @@
   class="fixed inset-0 bg-white z-50 hidden flex flex-col p-6"
 >
   <div class="flex items-center justify-between mb-4">
-    <button onclick="toggleMobileMenu()" class="text-2xl font-bold">
+    <button onclick="toggleActionMenu()" class="text-2xl font-bold">
       &lt;
     </button>
     <span class="text-lg font-semibold">Menu</span>
   </div>
   <button
-    onclick="openTab('Dictionary'); toggleMobileMenu()"
+    onclick="openTab('Dictionary'); toggleActionMenu()"
     class="mb-2 text-left"
   >
     Open Dictionary
   </button>
   <button
-    onclick="openTab('Document'); toggleMobileMenu()"
+    onclick="openTab('Document'); toggleActionMenu()"
     class="mb-2 text-left"
   >
     Open Document
   </button>
   <button
-    onclick="openTab('Conversation'); toggleMobileMenu()"
+    onclick="openTab('Conversation'); toggleActionMenu()"
     class="mb-2 text-left"
   >
     Open Conversation
   </button>
-  <button onclick="openTab('Video'); toggleMobileMenu()" class="mb-2 text-left">
+  <button onclick="openTab('Video'); toggleActionMenu()" class="mb-2 text-left">
     Open Video
   </button>
 </div>
@@ -133,7 +128,7 @@
   let tabs = [];
 
   function setContent(type) {
-    mainContent.innerHTML = `<h1 class="text-2xl font-bold">${type}</h1><p class="mt-2">This is the ${type.toLowerCase()} view.</p>`;
+    mainContent.innerHTML = `<h1 class="text-2xl font-bold">${type}</h1><p class="mt-2">This is the ${type.toLowerCase()} view.</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p><p>MMMMMM</p>`;
     footerInfo.textContent = `Currently viewing: ${type}`;
   }
 
@@ -188,10 +183,6 @@
     actionMenu.classList.toggle("hidden");
   }
 
-  function toggleMobileMenu() {
-    mobileMenu.classList.toggle("hidden");
-  }
-
   // Keyboard handlers
   document.addEventListener("keydown", (e) => {
     if (e.key === "?") {
@@ -203,8 +194,6 @@
       toggleActionMenu();
     }
   });
-
-  document.getElementById("help-button").addEventListener("click", toggleModal);
 
   // Initial view
   openTab("Home");
