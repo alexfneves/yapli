@@ -1,7 +1,7 @@
 <h1>Hello2, {{ name }}!</h1>
 <p>Your favorite color is {{ color }}.</p>
 <!-- Main Content -->
-<main id="main-content" class="flex-grow p-6">
+<main id="main-content" class="flex-1 overflow-y-scroll">
   <h1 class="text-2xl font-bold">Home</h1>
   <p class="mt-2">Welcome to the home page.</p>
 </main>
@@ -14,11 +14,12 @@
   <!-- Tabs go here -->
 </div>
 
+<!-- class="flex justify-between items-center px-4 py-2 border-t bg-white text-sm relative h-12 shrink-0" -->
 <footer
-  class="flex justify-between items-center px-4 py-2 border-t bg-white text-sm relative h-12"
+  class="w-full p-4 flex justify-between items-center border-t bg-white text-sm relative"
 >
   <!-- Footer info, always shown (but truncated if needed) -->
-  <div id="footer-info" class="truncate text-xs ml-2 flex-1">
+  <div id="footer-info" class="truncate ml-2 flex-1">
     Currently viewing: Home
   </div>
 
@@ -37,7 +38,7 @@
 <!-- Floating Action Menu (Desktop only) -->
 <div
   id="action-menu"
-  class="hidden absolute right-0 bottom-12 border rounded-tl shadow-lg p-4 space-y-2 z-10 bg-gray-400 p-1.5 box-border"
+  class="hidden fixed right-0 bottom-12 border rounded-tl shadow-lg p-4 space-y-2 z-10 bg-gray-400 p-1.5 box-border"
 >
   <div class="relative border-2 border-black p-5 bg-gray-400 box-border">
     <div

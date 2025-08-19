@@ -40,7 +40,7 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /run/user/1001/tmpr7c50rhe.js
+// include: /run/user/1001/tmp2_1q1qtj.js
 
   Module['expectedDataFileDownloads'] ??= 0;
   Module['expectedDataFileDownloads']++;
@@ -216,25 +216,25 @@ var REMOTE_PACKAGE_SIZE = metadata['remote_package_size'];
     }
 
     }
-    loadPackage({"files": [{"filename": "/asdf.html", "start": 0, "end": 72}, {"filename": "/body.html", "start": 72, "end": 6944}, {"filename": "/color_themes.html", "start": 6944, "end": 8878}, {"filename": "/fdsa.html", "start": 8878, "end": 11807}, {"filename": "/head.html", "start": 11807, "end": 12038}], "remote_package_size": 12038});
+    loadPackage({"files": [{"filename": "/asdf.html", "start": 0, "end": 72}, {"filename": "/body.html", "start": 72, "end": 7050}, {"filename": "/color_themes.html", "start": 7050, "end": 8984}, {"filename": "/fdsa.html", "start": 8984, "end": 11913}, {"filename": "/head.html", "start": 11913, "end": 12144}], "remote_package_size": 12144});
 
   })();
 
-// end include: /run/user/1001/tmpr7c50rhe.js
-// include: /run/user/1001/tmpuzol1rui.js
+// end include: /run/user/1001/tmp2_1q1qtj.js
+// include: /run/user/1001/tmpt2iikzlk.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if ((typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER) || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD) || (typeof ENVIRONMENT_IS_AUDIO_WORKLET != 'undefined' && ENVIRONMENT_IS_AUDIO_WORKLET)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /run/user/1001/tmpuzol1rui.js
-// include: /run/user/1001/tmp81ceu1dj.js
+  // end include: /run/user/1001/tmpt2iikzlk.js
+// include: /run/user/1001/tmpxzolu9hp.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /run/user/1001/tmp81ceu1dj.js
+  // end include: /run/user/1001/tmpxzolu9hp.js
 
 
 var arguments_ = [];
