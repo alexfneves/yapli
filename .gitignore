@@ -3,8 +3,5 @@
 .devenv
 .direnv
 build
-public/out.data
-public/out.js
-public/out.wasm
-public/out.wasm.map
+public/out*
 compile_commands.json
