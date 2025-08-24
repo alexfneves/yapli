@@ -1,5 +1,10 @@
+.cache
+.crush
 .devenv
 .direnv
-public/out.wasm
-public/out.js
+build
 public/out.data
+public/out.js
+public/out.wasm
+public/out.wasm.map
+compile_commands.json

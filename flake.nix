@@ -56,24 +56,8 @@
                       export INJA_INCLUDE_PATH=${pkgs.inja}/include
                       export JSON_INCLUDE_PATH=${pkgs.nlohmann_json}/include
                       echo "Building"
-                      emcc src/main.cpp \
-                        -std=c++17 \
-                        -I"$INJA_INCLUDE_PATH" \
-                        -I"$JSON_INCLUDE_PATH" \
-                        -s WASM=1 \
-                        -s ALLOW_MEMORY_GROWTH=1 \
-                        -s MODULARIZE=1 \
-                        -s EXPORT_NAME=createModule \
-                        -s EXPORTED_RUNTIME_METHODS=ccall,cwrap \
-                        -s NO_DISABLE_EXCEPTION_CATCHING \
-                        -s ASSERTIONS=1 \
-                        -s EXCEPTION_STACK_TRACES=1 \
-                        -s DISABLE_EXCEPTION_THROWING=0 \
-                        -g \
-                        -fdebug-compilation-dir=".." \
-                        --preload-file templates@/ \
-                        --bind \
-                        -o public/out.js
+                      cd build && emcmake cmake .. && emmake make && cd ..
+                      mv build/compile_commands.json .
                     '';
                     hot-reload.exec = ''
                       build
