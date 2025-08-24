@@ -1,0 +1,26 @@
+{
+  auto_https off
+  http_port 8081  # use an unprivileged port if HTTP is ever used
+}
+
+https://localhost:8000, https://192.168.0.35:8080 {
+  tls certs/localhost.crt certs/localhost.key
+
+  @src path /src/*
+  handle @src {
+    root * ./src
+    file_server
+  }
+
+  @root path /
+  handle @root {
+    root * ./public
+    file_server
+  }
+
+  handle {
+    root * ./public
+    try_files {path} /index.html
+    file_server
+  }
+}

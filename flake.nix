@@ -36,7 +36,7 @@
                     pkgs.emscripten
                     pkgs.nlohmann_json
                     pkgs.inja
-                    pkgs.http-server
+                    pkgs.caddy
                     pkgs.websocat
                     pkgs.inotify-tools
                   ];
@@ -56,7 +56,7 @@
                       export INJA_INCLUDE_PATH=${pkgs.inja}/include
                       export JSON_INCLUDE_PATH=${pkgs.nlohmann_json}/include
                       echo "Building"
-                      cd build && emcmake cmake .. && emmake make && cd ..
+                      mkdir -p build && cd build && emcmake cmake .. && emmake make && cd ..
                       mv build/compile_commands.json .
                     '';
                     hot-reload.exec = ''
@@ -66,7 +66,7 @@
                     '';
                   };
                   processes = {
-                    serve.exec = "http-server -p 8080 . -c-1";
+                    serve.exec = "caddy run --config ./caddyfile";
                     watch.exec = "bash ./watch.bash";
                     reload-server.exec = "websocat -E -t ws-l:127.0.0.1:1234 broadcast:mirror:";
                   };

@@ -1,0 +1,20 @@
+{
+  "name": "Yapli",
+  "short_name": "Yapli",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007acc",
+  "icons": [
+    {
+      "src": "/study-abroad128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/study-abroad512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
