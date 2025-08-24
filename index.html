@@ -2,12 +2,14 @@
 <html>
   <head>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json" />
     <meta id="head" />
   </head>
   <body>
     <div id="main" class="flex flex-col h-screen overflow-hidden">
       Loading...
     </div>
+    <script src="out.js"></script>
     <script>
       (function () {
         const socket = new WebSocket("ws://127.0.0.1:1234");
@@ -52,14 +54,6 @@
       }
 
       (async function () {
-        await new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = `out.js?v=${Math.random()}`;
-          script.onload = resolve;
-          script.onerror = reject;
-          document.body.appendChild(script);
-        });
-
         createModule().then((Module) => {
           const render = Module.cwrap("render", "string", ["string", "string"]);
           let result = render("head", JSON.stringify(context));
@@ -81,6 +75,14 @@
       window.addEventListener("resize", setAppHeight);
       window.addEventListener("orientationchange", setAppHeight);
       setAppHeight();
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/sw.js").then((reg) => {
+            console.log("SW registered!", reg);
+          });
+        });
+      }
     </script>
   </body>
 </html>
